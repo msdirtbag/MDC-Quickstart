@@ -3,6 +3,7 @@
 ## Usage
 ### STEP 1
 1. Execute (PowerShell) Azure Cloud Shell
+
 a. Set Client Environment Parameters
 
 ```
@@ -15,6 +16,7 @@ az account set --subscription ${SUBSCRIPTION_GUID} --verbose
 ```
 ### STEP 2
 1. (PowerShell) Azure Cloud Shell
+
 a. Deploy Policy Set
 
 ```
