@@ -48,7 +48,7 @@ module mdcroleassignment './roleassign.bicep' = {
   scope:subscription()
   params:{
     principalId:mdcmanagedidentity.outputs.miresourcepid
-    roleDefinitionId:roledefinitionId
+    roledefinitionId:roledefinitionId
   }
   dependsOn: [
     mdcmanagedidentity
