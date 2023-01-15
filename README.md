@@ -1,6 +1,6 @@
 # MDC-Quickstart 2.0
 
-Defender for Servers deployments can be complicated, MDC-Quickstart makes them simple. MDC-Quickstart contains the Arc & Azure Virtual Machine settings needed for a modern Defender for Servers deployment and can be imported in a few minutes with Azure Cloud Shell/Github. 
+Defender for Servers deployments can be complicated, MDC-Quickstart makes them simple! MDC-Quickstart contains the Arc & Azure Virtual Machine settings needed for a modern Defender for Servers deployment and can be imported in a few minutes with Azure Cloud Shell/Github. 
 
 👉(2) flavors:
 
