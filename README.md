@@ -13,9 +13,14 @@ Defender for Servers deployments can be complicated, MDC-Quickstart makes them s
 Add ons:
 
 -Automanage Machine Configuration Studio for customizing MDE Active & Passive policy sets for Servers
+
 -Automanage Custom Configuration profiles
+
 -Change Tracking & File Integrity Monitoring
+
 -Windows Admin Center
+
 -VM Insights
+
 -Update Management Center
 
