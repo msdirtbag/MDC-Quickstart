@@ -3,16 +3,19 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "loganalyticsregion": {
-      "value": "eastus"
+      "value": ",<region>"
     },
-    "mgmtresourcegroup": {
+    "mgmtresourcgroup": {
       "value": "rg-arc-prod-mgmgt"
     },
-    "roleDefinitionId": {
+    "roledefinitionId": {
       "value": "b24988ac-6180-42a0-ab88-20f7382dd24c"
     },
+    "vminsightsdcrname": {
+      "value": "dcr-arc-prod-mgmgt"
+    },
     "loganalyticsrid": {
-      "value": "/subscriptions/<XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX>/resourcegroups/<XXXXXXXXXXXXXXXXXXXX>/providers/microsoft.operationalinsights/workspaces/<XXXXXXXXXXXXXXXXXXXXXXXX>"
+      "value": "<laresourceid>"
     }
   }
 }

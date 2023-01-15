@@ -5,13 +5,40 @@ targetScope = 'subscription'
 //Parameters
 param loganalyticsregion string
 param azmanagedidentity string
-param mgmtresourcegroup string
+param mgmtresourcgroup string
 param loganalyticsrid string
-
-
+param muasminame string
+param vminsightsdcrname string
+param mdcdcr01id string
 //Resources
 //MDC Azure Policy
-resource Policy1 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
+resource Policy1'Microsoft.Authorization/policyAssignments@2021-06-01' = {
+  name: 'Prevent MMA Windows'
+  properties: {
+    displayName: 'Prevent MMA Windows'
+    parameters: {
+      effect: {
+        value: 'Deny'
+      }
+    }
+    policyDefinitionId: '/providers/Microsoft.Authorization/policyDefinitions/df441472-4dae-4e4e-87b9-9205ba46be16'
+  }
+}
+
+resource Policy2 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
+  name: 'Prevent MMA Linux'
+  properties: {
+    displayName: 'Prevent MMA Linux'
+    parameters: {
+      effect: {
+        value: 'Deny'
+      }
+    }
+    policyDefinitionId: '/providers/Microsoft.Authorization/policyDefinitions/bd58d393-162c-4134-bcd6-a6a5484a37a1'
+  }
+}
+
+resource Policy3 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
   name: 'Configure periodic checking for missing system updates'
   #disable-next-line no-loc-expr-outside-params
   location: deployment().location
@@ -23,51 +50,11 @@ resource Policy1 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
   }
   properties: {
     displayName: 'Configure periodic checking for missing system updates'
-    policyDefinitionId: '/providers/Microsoft.Authorization/policyDefinitions/59efceea-0c96-497e-a4a1-4eb2290dac15'
-  }
-}
-
-resource Policy2 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
-  name: 'Adaptive network hardening recommendations should be applied'
-  properties: {
-    displayName: 'Adaptive network hardening recommendations should be applied'
-    policyDefinitionId: '/providers/Microsoft.Authorization/policyDefinitions/08e6af2d-db70-460a-bfe9-d5bd474ba9d6'
-  }
-}
-
-resource Policy3 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
-  name: 'Configure Azure Security agent Windows'
-  #disable-next-line no-loc-expr-outside-params
-  location: deployment().location
-  identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: {
-      '${azmanagedidentity}': {}
-    }
-  }
-  properties: {
-    displayName: 'Configure Azure Security agent Windows'
-    policyDefinitionId: '/providers/Microsoft.Authorization/policyDefinitions/1537496a-b1e8-482b-a06a-1cc2415cdc7b'
+    policyDefinitionId: '/providers/Microsoft.Authorization/policyDefinitions/bfea026e-043f-4ff4-9d1b-bf301ca7ff46'
   }
 }
 
 resource Policy4 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
-  name: 'Configure Azure Security agent Linux'
-  #disable-next-line no-loc-expr-outside-params
-  location: deployment().location
-  identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: {
-      '${azmanagedidentity}': {}
-    }
-  }
-  properties: {
-    displayName: 'Configure Azure Security agent Linux'
-    policyDefinitionId: '/providers/Microsoft.Authorization/policyDefinitions/5f8eb305-9c9f-4abe-9bb0-df220d9faba2'
-  }
-}
-
-resource Policy5 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
   name: 'Configure Microsoft Defender for Endpoint Windows'
   #disable-next-line no-loc-expr-outside-params
   location: deployment().location
@@ -83,7 +70,7 @@ resource Policy5 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
   }
 }
 
-resource Policy6 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
+resource Policy5 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
   name: 'Configure Microsoft Defender for Endpoint Linux'
   #disable-next-line no-loc-expr-outside-params
   location: deployment().location
@@ -99,15 +86,41 @@ resource Policy6 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
   }
 }
 
-resource Policy7 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
-  name: 'CIS Microsoft Azure Foundations Benchmark v1.4.0'
+resource Policy6 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
+  name: 'Configure Microsoft Defender for Cloud AMA'
+  #disable-next-line no-loc-expr-outside-params
+  location: deployment().location
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${azmanagedidentity}': {}
+    }
+  }
   properties: {
-    displayName: 'BV-CIS Microsoft Azure Foundations Benchmark v1.4.0'
-    policyDefinitionId: '/providers/Microsoft.Authorization/policySetDefinitions/c3f5c4d9-9a1d-4a99-85c0-7f93e384d5c5'
+    displayName: 'Configure Microsoft Defender for Cloud AMA'
+    parameters: {
+      workspaceRegion: {
+        value: loganalyticsregion
+      }
+      userWorkspaceResourceId:{
+        value: loganalyticsrid
+      }
+      bringYourOwnUserAssignedManagedIdentity:{
+        value: true
+      }
+      userAssignedManagedIdentityName:{
+        value: muasminame
+      }
+      userAssignedManagedIdentityResourceGroup:{
+        value: mgmtresourcgroup
+      }
+
+    }
+    policyDefinitionId: '/providers/Microsoft.Authorization/policySetDefinitions/500ab3a2-f1bd-4a5a-8e47-3e09d9a294c3'
   }
 }
 
-resource Policy8 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
+resource Policy7 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
   name: 'Auditing on SQL server should be enabled'
   #disable-next-line no-loc-expr-outside-params
   location: deployment().location
@@ -117,7 +130,111 @@ resource Policy8 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
   }
 }
 
+resource Policy8 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
+  name: 'Adaptive network hardening recommendations should be applied'
+  #disable-next-line no-loc-expr-outside-params
+  location: deployment().location
+  properties: {
+    displayName: 'Adaptive network hardening recommendations should be applied'
+    policyDefinitionId: '/providers/Microsoft.Authorization/policyDefinitions/08e6af2d-db70-460a-bfe9-d5bd474ba9d6'
+  }
+}
+
 resource Policy9 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
+  name: 'Enable ChangeTracking and Inventory'
+  #disable-next-line no-loc-expr-outside-params
+  location: deployment().location
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${azmanagedidentity}': {}
+    }
+  }
+  properties: {
+    displayName: 'Enable ChangeTracking and Inventory'
+    parameters:{
+      dcrResourceId: {
+        value:mdcdcr01id
+      }
+    }  
+    policyDefinitionId: '/providers/Microsoft.Authorization/policySetDefinitions/53448c70-089b-4f52-8f38-89196d7f2de1'
+  }
+}
+
+resource Policy10 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
+  name: 'Enable Azure Monitor for VMs'
+  #disable-next-line no-loc-expr-outside-params
+  location: deployment().location
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${azmanagedidentity}': {}
+    }
+  }
+  properties: {
+    displayName: 'Enable Azure Monitor for VMs'
+    parameters:{
+      enableProcessesAndDependencies: {
+        value:true
+      }
+      dataCollectionRuleName: {
+        value:vminsightsdcrname
+      }
+      logAnalyticsWorkspace:{
+        value:loganalyticsrid
+      }
+    }
+    policyDefinitionId: '/providers/Microsoft.Authorization/policySetDefinitions/59e9c3eb-d8df-473b-8059-23fd38ddd0f0'
+  }
+}
+
+resource Policy11'Microsoft.Authorization/policyAssignments@2021-06-01' = {
+  name: 'Configure SQL Server extension on Servers'
+  #disable-next-line no-loc-expr-outside-params
+  location: deployment().location
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${azmanagedidentity}': {}
+    }
+  }
+  properties: {
+    displayName: 'Configure SQL Server extension on Servers'
+    policyDefinitionId: '/providers/Microsoft.Authorization/policyDefinitions/fd2d1a6e-6d95-4df2-ad00-504bf0273406'
+  }
+}
+
+resource Policy12'Microsoft.Authorization/policyAssignments@2021-06-01' = {
+  name: 'Audit STIG Requirements for Windows'
+  #disable-next-line no-loc-expr-outside-params
+  location: deployment().location
+  properties: {
+    displayName: 'Audit STIG Requirements for Windows'
+    parameters:{
+      IncludeArcMachines: {
+        value:'true'
+      }
+    }
+    policyDefinitionId: '/providers/Microsoft.Authorization/policyDefinitions/50c52fc9-cb21-4d99-9031-d6a0c613361c'
+  }
+}
+
+resource Policy13'Microsoft.Authorization/policyAssignments@2021-06-01' = {
+  name: 'Audit STIG Requirements for Linux'
+  #disable-next-line no-loc-expr-outside-params
+  location: deployment().location
+  properties: {
+    displayName: 'Audit STIG Requirements for Linux'
+    parameters:{
+      IncludeArcMachines: {
+        value:'true'
+      }
+    }
+    policyDefinitionId: '/providers/Microsoft.Authorization/policyDefinitions/50c52fc9-cb21-4d99-9031-d6a0c613361c'
+  }
+}
+
+resource Policy14 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
   name: 'Adaptive application controls should be enabled'
   #disable-next-line no-loc-expr-outside-params
   location: deployment().location
@@ -133,7 +250,7 @@ resource Policy9 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
   }
 }
 
-resource Policy10 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
+resource Policy15 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
   name: 'Configure Windows Server Automanage'
   #disable-next-line no-loc-expr-outside-params
   location: deployment().location
@@ -154,8 +271,8 @@ resource Policy10 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
   }
 }
 
-resource Policy11 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
-  name: 'Configure Microsoft Defender for Cloud AMA'
+resource Policy16 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
+  name: 'Deploy prerequisites to enable Guest Configuration policies'
   #disable-next-line no-loc-expr-outside-params
   location: deployment().location
   identity: {
@@ -165,126 +282,9 @@ resource Policy11 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
     }
   }
   properties: {
-    displayName: 'Configure Microsoft Defender for Cloud AMA'
-    parameters: {
-      workspaceRegion: {
-        value: loganalyticsregion
-      }
-      userWorkspaceResourceId:{
-        value: loganalyticsrid
-      }
-    }
-    policyDefinitionId: '/providers/Microsoft.Authorization/policySetDefinitions/c15c5978-ab6e-4599-a1c3-90a7918f5371'
-  }
-}
-
-resource Policy12 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
-  name: 'Configure MDC Data Collection Rule'
-  #disable-next-line no-loc-expr-outside-params
-  location: deployment().location
-  identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: {
-      '${azmanagedidentity}': {}
-    }
-  }
-  properties: {
-    displayName: 'Configure MDC Data Collection Rule'
-    parameters: {
-      workspaceRegion: {
-        value: loganalyticsregion
-      }
-    }
-    policyDefinitionId: '/providers/Microsoft.Authorization/policySetDefinitions/9c0aa188-e5fe-4569-8f74-b6e155624d9a'
-  }
-}
-
-resource Policy13 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
-  name: 'Configure Azure Monitor Agent Windows'
-  #disable-next-line no-loc-expr-outside-params
-  location: deployment().location
-  identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: {
-      '${azmanagedidentity}': {}
-    }
-  }
-  properties: {
-    displayName: 'Configure Azure Monitor Agent Windows'
+    displayName: 'Deploy prerequisites to enable Guest Configuration policies'
     parameters: {
     }
-    policyDefinitionId: '/providers/Microsoft.Authorization/policySetDefinitions/637125fd-7c39-4b94-bb0a-d331faf333a9'
-  }
-}
-
-resource Policy14 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
-  name: 'Configure Azure Monitor Agent Linux'
-  #disable-next-line no-loc-expr-outside-params
-  location: deployment().location
-  identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: {
-      '${azmanagedidentity}': {}
-    }
-  }
-  properties: {
-    displayName: 'Configure Azure Monitor Agent Linux'
-    parameters: {
-    }
-    policyDefinitionId: '/providers/Microsoft.Authorization/policySetDefinitions/ae8a10e6-19d6-44a3-a02d-a2bdfc707742'
-  }
-}
-
-resource Policy15 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
-  name: 'Assign Built-In User-Assigned Managed Identity to Virtual Machines'
-  #disable-next-line no-loc-expr-outside-params
-  location: deployment().location
-  identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: {
-      '${azmanagedidentity}': {}
-    }
-  }
-  properties: {
-    displayName: 'Assign Built-In User-Assigned Managed Identity to Virtual Machines'
-    parameters: {
-      bringYourOwnUserAssignedManagedIdentity: {
-        value: true
-      }
-      userAssignedIdentityName: {
-        value: 'mdc-azpolicy'
-      }
-
-      identityResourceGroup: {
-        value: mgmtresourcegroup
-      }
-    }
-    policyDefinitionId: '/providers/Microsoft.Authorization/policySetDefinitions/d367bd60-64ca-4364-98ea-276775bddd94'
-  }
-}
-
-resource Policy16'Microsoft.Authorization/policyAssignments@2021-06-01' = {
-  name: 'Prevent MMA Windows'
-  properties: {
-    displayName: 'Prevent MMA Windows'
-    parameters: {
-      effect: {
-        value: 'Deny'
-      }
-    }
-    policyDefinitionId: '/providers/Microsoft.Authorization/policyDefinitions/d2185817-5b7e-473c-aadd-9de6ac11428'
-  }
-}
-
-resource Policy17 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
-  name: 'Prevent MMA Linux'
-  properties: {
-    displayName: 'Prevent MMA Linux'
-    parameters: {
-      effect: {
-        value: 'Deny'
-      }
-    }
-    policyDefinitionId: '/providers/Microsoft.Authorization/policyDefinitions/d4b065e2-fbda-4461-a42c-b0346aeb12a0'
+    policyDefinitionId: '/providers/Microsoft.Authorization/policySetDefinitions/2b0ce52e-301c-4221-ab38-1601e2b4cee3'
   }
 }

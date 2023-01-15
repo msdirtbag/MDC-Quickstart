@@ -1,0 +1,98 @@
+{
+    "properties": {
+      "displayName": "Configure MDC-Automanage on Windows Arc Servers",
+      "policyType": "Custom",
+      "mode": "Indexed",
+      "metadata": {
+        "version": "1.0.0-preview",
+        "category": "Azure Arc"
+      },
+      "parameters": {
+        "configurationProfile": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Configuration profile",
+            "description": "The management services provided are based on your own settings from your custom Configuration Profile.",
+            "strongType": "Microsoft.Automanage/configurationProfiles"
+          }
+        },
+        "effect": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Effect",
+            "description": "Enable or disable the execution of this policy"
+          },
+          "allowedValues": [
+            "AuditIfNotExists",
+            "DeployIfNotExists",
+            "Disabled"
+          ],
+          "defaultValue": "DeployIfNotExists"
+        }
+      },
+      "policyRule": {
+        "if": {
+          "allOf": [
+            {
+              "field": "type",
+              "equals": "Microsoft.HybridCompute/machines"
+            },
+            {
+              "field": "Microsoft.HybridCompute/machines/osName",
+              "like": "windows*"
+            }
+          ]
+        },
+        "then": {
+          "effect": "[parameters('effect')]",
+          "details": {
+            "roleDefinitionIds": [
+              "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+            ],
+            "type": "Microsoft.Automanage/configurationProfileAssignments",
+            "name": "default",
+            "existenceCondition": {
+              "field": "Microsoft.Automanage/configurationProfileAssignments/configurationProfile",
+              "equals": "[parameters('configurationProfile')]"
+            },
+            "deployment": {
+              "properties": {
+                "mode": "incremental",
+                "parameters": {
+                  "machineName": {
+                    "value": "[field('Name')]"
+                  },
+                  "configurationProfile": {
+                    "value": "[parameters('configurationProfile')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "parameters": {
+                    "machineName": {
+                      "type": "String"
+                    },
+                    "configurationProfile": {
+                      "type": "string"
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.HybridCompute/machines/providers/configurationProfileAssignments",
+                      "apiVersion": "2022-05-04",
+                      "name": "[concat(parameters('machineName'), '/Microsoft.Automanage/', 'default')]",
+                      "properties": {
+                        "configurationProfile": "[parameters('configurationProfile')]"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "name": "4dbe41f2-af26-4a32-91a9-280b7b81b370"
+  }

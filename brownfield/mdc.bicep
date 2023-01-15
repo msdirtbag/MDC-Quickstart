@@ -4,6 +4,7 @@ targetScope = 'subscription'
 //Variables
 
 //Parameters
+param vulnerabilityassessmentprovidertype string = 'mdeTvm'
 
 //Resources
 resource cspmplan 'Microsoft.Security/pricings@2022-03-01' = {
@@ -25,9 +26,41 @@ resource serversplan 'Microsoft.Security/pricings@2022-03-01' = {
 }
 
 resource dnsplan 'Microsoft.Security/pricings@2022-03-01' = {
-  name: 'dns'
+  name: 'Dns'
   properties: {
     pricingTier: 'Standard'
+  }
+}
+
+resource sqlplan 'Microsoft.Security/pricings@2022-03-01' = {
+  name: 'SqlServerVirtualMachines'
+  properties: {
+    pricingTier: 'Standard'
+  }
+}
+
+#disable-next-line BCP081
+resource defendervulnerabilitymanagement 'Microsoft.Security/serverVulnerabilityAssessmentsSettings@2022-01-01-preview' = if (vulnerabilityassessmentprovidertype =~ 'mdeTvm') {
+  name: 'AzureServersSetting'
+  kind: 'AzureServersSetting'
+  dependsOn: [
+    cspmplan
+    serversplan
+  ]
+  properties: {
+    selectedProvider: 'MdeTvm'
+  }
+}
+
+#disable-next-line BCP081
+resource agentlessscanning 'Microsoft.Security/VmScanners@2022-03-01-preview' = {
+  name: 'default'
+  dependsOn: [
+    cspmplan
+    serversplan
+  ]
+  properties: {
+    scanningMode: 'Default'
   }
 }
 

@@ -1,13 +1,15 @@
 //Scope
 targetScope = 'subscription'
 //Variables
-var machinename = 'machineName'
+
 //Parameters
 param loganalyticsregion string
 param azmanagedidentity string
 param mgmtresourcgroup string
 param loganalyticsrid string
 param muasminame string
+param vminsightsdcrname string
+param mdcdcr01id string
 //Resources
 //MDC Azure Policy
 resource Policy1'Microsoft.Authorization/policyAssignments@2021-06-01' = {
@@ -53,38 +55,6 @@ resource Policy3 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
 }
 
 resource Policy4 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
-  name: 'Configure Azure Security agent Windows'
-  #disable-next-line no-loc-expr-outside-params
-  location: deployment().location
-  identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: {
-      '${azmanagedidentity}': {}
-    }
-  }
-  properties: {
-    displayName: 'Configure Azure Security agent Windows'
-    policyDefinitionId: '/providers/Microsoft.Authorization/policyDefinitions/d01f3018-de9f-4d75-8dae-d12c1875da9f'
-  }
-}
-
-resource Policy5 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
-  name: 'Configure Azure Security agent Linux'
-  #disable-next-line no-loc-expr-outside-params
-  location: deployment().location
-  identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: {
-      '${azmanagedidentity}': {}
-    }
-  }
-  properties: {
-    displayName: 'Configure Azure Security agent Linux'
-    policyDefinitionId: '/providers/Microsoft.Authorization/policyDefinitions/2f47ec78-4301-4655-b78e-b29377030cdc'
-  }
-}
-
-resource Policy6 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
   name: 'Configure Microsoft Defender for Endpoint Windows'
   #disable-next-line no-loc-expr-outside-params
   location: deployment().location
@@ -100,7 +70,7 @@ resource Policy6 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
   }
 }
 
-resource Policy7 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
+resource Policy5 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
   name: 'Configure Microsoft Defender for Endpoint Linux'
   #disable-next-line no-loc-expr-outside-params
   location: deployment().location
@@ -116,7 +86,7 @@ resource Policy7 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
   }
 }
 
-resource Policy8 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
+resource Policy6 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
   name: 'Configure Microsoft Defender for Cloud AMA'
   #disable-next-line no-loc-expr-outside-params
   location: deployment().location
@@ -150,7 +120,7 @@ resource Policy8 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
   }
 }
 
-resource Policy9 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
+resource Policy7 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
   name: 'Auditing on SQL server should be enabled'
   #disable-next-line no-loc-expr-outside-params
   location: deployment().location
@@ -160,8 +130,18 @@ resource Policy9 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
   }
 }
 
-resource Policy10 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
+resource Policy8 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
   name: 'Adaptive application controls should be enabled'
+  #disable-next-line no-loc-expr-outside-params
+  location: deployment().location
+  properties: {
+    displayName: 'Adaptive application controls should be enabled'
+    policyDefinitionId: '/providers/Microsoft.Authorization/policyDefinitions/47a6b606-51aa-4496-8bb7-64b11cf66adc'
+  }
+}
+
+resource Policy9 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
+  name: 'Enable ChangeTracking and Inventory'
   #disable-next-line no-loc-expr-outside-params
   location: deployment().location
   identity: {
@@ -171,86 +151,85 @@ resource Policy10 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
     }
   }
   properties: {
-    displayName: 'Adaptive application controls should be enabled'
-    policyDefinitionId: '/providers/Microsoft.Authorization/policyDefinitions/47a6b606-51aa-4496-8bb7-64b11cf66adc'
+    displayName: 'Enable ChangeTracking and Inventory'
+    parameters:{
+      dcrResourceId: {
+        value:mdcdcr01id
+      }
+    }  
+    policyDefinitionId: '/providers/Microsoft.Authorization/policySetDefinitions/53448c70-089b-4f52-8f38-89196d7f2de1'
   }
 }
 
-resource configuremdcautomanage 'Microsoft.Authorization/policyDefinitions@2021-06-01' = {
-  name: 'Configure Automanage Windows Arc Servers'
+resource Policy10 'Microsoft.Authorization/policyAssignments@2021-06-01' = {
+  name: 'Enable Azure Monitor for VMs'
+  #disable-next-line no-loc-expr-outside-params
+  location: deployment().location
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${azmanagedidentity}': {}
+    }
+  }
   properties: {
-    displayName: 'Configure Automanage Windows Arc Servers'
-    description: 'Azure Automanage enrolls, configures, and monitors virtual machines with best practice as defined in the Microsoft Cloud Adoption Framework for Azure. Use this policy to apply Automanage with your own customized Configuration Profile to your selected scope.'
-    policyType: 'Custom'
-    mode: 'Indexed'
-    metadata: {
-      category: 'Automanage'
-      version: '1.5.0'
-    }
-    parameters: {
-      configurationProfile: {
-        type: 'string'
-        defaultValue: 'mdc-automanage-windows-arc'
-        metadata: {
-          displayName: 'Configuration profile'
-          description: 'The management services provided are based on your own settings from your custom Configuration Profile.'
-          strongType: 'Microsoft.Automanage/configurationProfiles'
-        }
+    displayName: 'Enable Azure Monitor for VMs'
+    parameters:{
+      enableProcessesAndDependencies: {
+        value:true
+      }
+      dataCollectionRuleName: {
+        value:vminsightsdcrname
+      }
+      logAnalyticsWorkspace:{
+        value:loganalyticsrid
       }
     }
-    policyRule: {
-      if: {
-        allOf: [
-          {
-            field: 'type'
-            equals: 'Microsoft.HybridCompute/machines'
-          }
-          {
-            field: 'Microsoft.HybridCompute/machines/osName'
-            equals: 'windows*'
-          }
-        ]
-      }
-      then: {
-        effect: 'deployIfNotExists'
-        details: {
-          type: 'Microsoft.Automanage/configurationProfileAssignments'
-          roleDefinitionIds: [
-            '/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c'
-          ]
-          existenceCondition: {
-            field: 'Microsoft.Automanage/configurationProfileAssignments/configurationProfile'
-            equals: 'mdc-automanage-windows-arc'
-          }
-          deployment: {
-            properties: {
-              mode: 'incremental'
-              template: {
-                '$schema': 'http://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#'
-                contentVersion: '1.0.0.0'
-                parameters: {
-                  machineName: {
-                    type: 'string'
-                  }
-                  configurationProfile: {
-                    type: 'string'
-                  }
-                }
-                resources: [
-                  {
-                    name: [concat (machinename, '/Microsoft.Automanage/', 'default')]
-                    type: 'Microsoft.HybridCompute/machines/providers/configurationProfileAssignments'
-                    apiVersion: '2022-05-04'
-                    properties: {
-                      configurationProfile: 'mdc-automanage-windows-arc'
-                    }
-                  }
-                ]
-              }
-            }
-          }
-        }
+    policyDefinitionId: '/providers/Microsoft.Authorization/policySetDefinitions/59e9c3eb-d8df-473b-8059-23fd38ddd0f0'
+  }
+}
+
+resource Policy11'Microsoft.Authorization/policyAssignments@2021-06-01' = {
+  name: 'Configure SQL Server extension on Arc Servers'
+  #disable-next-line no-loc-expr-outside-params
+  location: deployment().location
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${azmanagedidentity}': {}
+    }
+  }
+  properties: {
+    displayName: 'Configure SQL Server extension on Arc Servers'
+    policyDefinitionId: '/providers/Microsoft.Authorization/policyDefinitions/fd2d1a6e-6d95-4df2-ad00-504bf0273406'
+  }
+}
+
+resource Policy12'Microsoft.Authorization/policyAssignments@2021-06-01' = {
+  name: 'Audit STIG Requirements for Windows'
+  #disable-next-line no-loc-expr-outside-params
+  location: deployment().location
+  properties: {
+    displayName: 'Audit STIG Requirements for Windows'
+    parameters:{
+      IncludeArcMachines: {
+        value:'true'
       }
     }
+    policyDefinitionId: '/providers/Microsoft.Authorization/policyDefinitions/50c52fc9-cb21-4d99-9031-d6a0c613361c'
+  }
+}
+
+resource Policy13'Microsoft.Authorization/policyAssignments@2021-06-01' = {
+  name: 'Audit STIG Requirements for Linux'
+  #disable-next-line no-loc-expr-outside-params
+  location: deployment().location
+  properties: {
+    displayName: 'Audit STIG Requirements for Linux'
+    parameters:{
+      IncludeArcMachines: {
+        value:'true'
+      }
+    }
+    policyDefinitionId: '/providers/Microsoft.Authorization/policyDefinitions/50c52fc9-cb21-4d99-9031-d6a0c613361c'
   }
 }

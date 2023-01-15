@@ -16,18 +16,6 @@ output miresourcepid string = mdcmanagedidentity.properties.principalId
 output mirid string = mdcmanagedidentity.id
 output mirname string = mdcmanagedidentity.name
 
-resource mdcautomanagewindows 'Microsoft.Automanage/configurationProfiles@2022-05-04' = {
-  name: 'mdc-automanage-windows-vm'
-  location: loganalyticsregion
-  properties: {
-    configuration: {
-      'Antimalware/Enable': 'true'
-      'Antimalware/EnableRealTimeProtection': 'true'
-      'Antimalware/RunScheduledScan': 'false'
-      'AzureSecurityCenter/Enable': true
-    }
-  }
-}
 
 
 

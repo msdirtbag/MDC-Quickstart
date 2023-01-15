@@ -4,11 +4,12 @@ targetScope = 'subscription'
 
 //Parameters
 param loganalyticsregion string
+param mgmtresourcgroup string
 
 //Resources
 //Deploy Resource Groups for Arc Servers
-resource mgmtresourcgroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
-  name: 'rg-arc-prod-mgmgt'
+resource managmentresourcegroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
+  name: mgmtresourcgroup
   location: loganalyticsregion
 }
 

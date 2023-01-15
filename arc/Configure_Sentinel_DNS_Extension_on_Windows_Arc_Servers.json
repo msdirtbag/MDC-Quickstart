@@ -1,0 +1,107 @@
+{
+    "properties": {
+      "displayName": "Deploy Sentinel DNS Extension to Windows Arc Servers",
+      "policyType": "Custom",
+      "mode": "Indexed",
+      "metadata": {
+        "category": "Azure Arc",
+        "version": "1.0.0-preview"
+      },
+      "parameters": {
+        "effect": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Effect",
+            "description": "Enable or disable the execution of the policy"
+          },
+          "allowedValues": [
+            "DeployIfNotExists",
+            "AuditIfNotExists",
+            "Disabled"
+          ],
+          "defaultValue": "DeployIfNotExists"
+        }
+      },
+      "policyRule": {
+        "if": {
+          "allOf": [
+            {
+              "field": "type",
+              "equals": "Microsoft.HybridCompute/machines"
+            },
+            {
+              "field": "Microsoft.HybridCompute/machines/osName",
+              "like": "windows*"
+            }
+          ]
+        },
+        "then": {
+          "effect": "[parameters('effect')]",
+          "details": {
+            "roleDefinitionIds": [
+              "/providers/microsoft.authorization/roleDefinitions/9980e02c-c2be-4d73-94e8-173b1dc7cf3c"
+            ],
+            "type": "Microsoft.HybridCompute/machines/extensions",
+            "name": "MicrosoftDnsAgent",
+            "existenceCondition": {
+              "allOf": [
+                {
+                  "field": "Microsoft.HybridCompute/machines/extensions/type",
+                  "equals": "MicrosoftDnsAgent"
+                },
+                {
+                  "field": "Microsoft.HybridCompute/machines/extensions/provisioningState",
+                  "equals": "Succeeded"
+                }
+              ]
+            },
+            "deployment": {
+              "properties": {
+                "mode": "incremental",
+                "parameters": {
+                  "vmName": {
+                    "value": "[field('name')]"
+                  },
+                  "location": {
+                    "value": "[field('location')]"
+                  },
+                  "azureResourceId": {
+                    "value": "[concat('/subscriptions/', subscription().subscriptionId, '/resourceGroups/', resourceGroup().name, '/providers/Microsoft.HybridCompute/machines/',field('name'))]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "parameters": {
+                    "vmName": {
+                      "type": "string"
+                    },
+                    "location": {
+                      "type": "string"
+                    },
+                    "azureResourceId": {
+                      "type": "string"
+                    }
+                  },
+                  "resources": [
+                    {
+                      "apiVersion": "2022-05-10-preview",
+                      "name": "[concat(parameters('vmName'), '/MicrosoftDnsAgent')]",
+                      "type": "Microsoft.HybridCompute/machines/extensions",
+                      "location": "[parameters('location')]",
+                      "properties": {
+                        "autoUpgradeMinorVersion": true,
+                        "publisher": "Microsoft.Sentinel.AzureMonitorAgentExtensions",
+                        "type": "MicrosoftDnsAgent"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "name": "ceb0fa7b-dbca-45c3-8a27-a77cc29206e6"
+  }

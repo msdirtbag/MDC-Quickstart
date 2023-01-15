@@ -1,7 +1,7 @@
-//     MDC-Quickstart (Brownfield)
-//     v-1.0.0.0
+//     MDC-Quickstart (Arc)
+//     v-1.1
 //     *See README file for usage information
-//     *This bicep template will start MDC billing
+//     *This bicep template will start MDC & Guest Config billing
 //     *For best outcomes, locate all MDC resources in the same Azure Region as the Log Analytics Workspace
 
 //Scope
@@ -9,13 +9,13 @@ targetScope = 'subscription'
 
 //Parameters
 param loganalyticsregion string
-param mgmtresourcegroup string
+param mgmtresourcgroup string
 param roledefinitionId string
 param loganalyticsrid string
+param vminsightsdcrname string
 
 //Variables
-var miresourcegroup = string(mgmtresourcegroup)
-
+var miresourcgroup = string(mgmtresourcgroup)
 
 //Modules
 module mdcsettings './mdc.bicep' = {
@@ -30,12 +30,25 @@ module mdcresourcegroups './resourcegroup.bicep' = {
   scope:subscription()
   params:{
     loganalyticsregion:loganalyticsregion
+    mgmtresourcgroup:mgmtresourcgroup
+    
   }
+}
+
+module mdcautomanage './automanage.bicep' = {
+  name: 'MDCAutomanage'
+  scope:resourceGroup(miresourcgroup)
+  params:{
+    loganalyticsregion: loganalyticsregion
+  }
+  dependsOn: [
+    mdcroleassignment
+  ]
 }
 
 module mdcmanagedidentity './managedid.bicep' = {
   name: 'MDCUserManagedIdentity'
-  scope:resourceGroup(miresourcegroup)
+  scope:resourceGroup(miresourcgroup)
   params:{
     loganalyticsregion:loganalyticsregion
   }
@@ -56,15 +69,42 @@ module mdcroleassignment './roleassign.bicep' = {
   ]
 }
 
+module mdcdcr './dcr.bicep' = {
+  name: 'MDCDataCollectionRule'
+  scope:resourceGroup(miresourcgroup)
+  params:{
+    loganalyticsregion: loganalyticsregion
+    loganalyticsrid: loganalyticsrid
+  }
+  dependsOn: [
+    mdcroleassignment
+  ]
+}
+
 module mdcazpolicy './policy.bicep' = {
   name: 'MDCAzurePolicy'
   scope:subscription()
   params:{
     loganalyticsregion: loganalyticsregion
     azmanagedidentity: mdcmanagedidentity.outputs.mirid
-    mgmtresourcegroup: mgmtresourcegroup
+    mgmtresourcgroup: mgmtresourcgroup
+    muasminame:mdcmanagedidentity.outputs.mirname
     loganalyticsrid:loganalyticsrid
+    vminsightsdcrname: vminsightsdcrname
+    mdcdcr01id: mdcdcr.outputs.mdcdcrid01
 
+  }
+  dependsOn: [
+    mdcroleassignment
+  ]
+}
+
+module mdccusazpolicy './custompolicy.bicep' = {
+  name: 'MDCCUSAzurePolicy'
+  scope:subscription()
+  params:{
+    loganalyticsregion:loganalyticsregion
+    azmanagedidentity:mdcmanagedidentity.outputs.mirid
   }
   dependsOn: [
     mdcroleassignment
