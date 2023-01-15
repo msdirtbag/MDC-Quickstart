@@ -14,8 +14,8 @@
                 "name": "MDC_Quickstart_Active",
                 "version": "1.0.0",
                 "contentType": "Custom",
-                "contentUri": "https://bvscriptsus.blob.core.windows.net/arm/MDC_Quickstart_Active.zip",
-                "contentHash": "1A76F2861A67C75375A589A50812E8C359C4B32D865999BF92464418471AE8EE"
+                "contentUri": "https://cdn.githubraw.com/msdirtbag/MDC-Quickstart/main/machineconfigs/Examples/MDC_Quickstart_Active.zip",
+                "contentHash": "01EB8766337A13EA7374E1807395B6B3E1038B6571172F0418C71970F690BE17"
             }
         },
         "parameters": {
@@ -291,8 +291,8 @@
                                                 "name": "MDC_Quickstart_Active",
                                                 "version": "1.0.0",
                                                 "contentType": "Custom",
-                                                "contentUri": "https://bvscriptsus.blob.core.windows.net/arm/MDC_Quickstart_Active.zip",
-                                                "contentHash": "1A76F2861A67C75375A589A50812E8C359C4B32D865999BF92464418471AE8EE",
+                                                "contentUri": "https://cdn.githubraw.com/msdirtbag/MDC-Quickstart/main/machineconfigs/Examples/MDC_Quickstart_Active.zip",
+                                                "contentHash": "01EB8766337A13EA7374E1807395B6B3E1038B6571172F0418C71970F690BE17",
                                                 "assignmentType": "ApplyAndAutoCorrect"
                                             }
                                         }
@@ -308,8 +308,8 @@
                                                 "name": "MDC_Quickstart_Active",
                                                 "version": "1.0.0",
                                                 "contentType": "Custom",
-                                                "contentUri": "https://bvscriptsus.blob.core.windows.net/arm/MDC_Quickstart_Active.zip",
-                                                "contentHash": "1A76F2861A67C75375A589A50812E8C359C4B32D865999BF92464418471AE8EE",
+                                                "contentUri": "https://cdn.githubraw.com/msdirtbag/MDC-Quickstart/main/machineconfigs/Examples/MDC_Quickstart_Active.zip",
+                                                "contentHash": "01EB8766337A13EA7374E1807395B6B3E1038B6571172F0418C71970F690BE17",
                                                 "assignmentType": "ApplyAndAutoCorrect"
                                             }
                                         }
