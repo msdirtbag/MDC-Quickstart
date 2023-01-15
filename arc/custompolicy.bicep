@@ -8,7 +8,6 @@ param loganalyticsregion string
 //Variables
 var configure_machine_configurations_on_windows_servers = json(loadTextContent('./Configure_Machine_Configurations_on_Windows_Servers.json'))
 var configure_mdc_automanage_on_windows_arc_servers = json(loadTextContent('./Configure_MDC_Automanage_on_Windows_Arc_Servers.json'))
-var configure_sentinel_dns_extension_on_windows_arc_servers = json(loadTextContent('./Configure_Sentinel_DNS_Extension_on_Windows_Arc_Servers.json'))
 var configure_windows_admin_center_on_windows_arc_servers = json(loadTextContent('./Configure_Windows_Admin_Center_on_Windows_Arc_Servers.json'))
 
 //Custom Definitions & Assignments
@@ -65,36 +64,13 @@ resource policy2as 'Microsoft.Authorization/policyAssignments@2022-06-01' = {
     policyDefinitionId: policy2.id
   }
 }
+
 resource policy3 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
-  name: 'configure_sentinel_dns_extension_on_windows_arc_server'
-  properties: configure_sentinel_dns_extension_on_windows_arc_servers.properties
-}
-
-resource policy3as 'Microsoft.Authorization/policyAssignments@2022-06-01' = {
-  name: 'Configure Sentinel DNS Extension on Windows Arc Server'
-  location: loganalyticsregion
-  scope: subscription()
-  identity: {
-    type: 'UserAssigned'
-    userAssignedIdentities: {
-      '${azmanagedidentity}': {}
-    }
-  }
-  properties: {
-    description: 'This policy will install the Sentinel DNS Extension for MDE-Quickstart'
-    displayName: 'Configure Sentinel DNS Extension on Windows Arc Server'
-    parameters: {
-    }
-    policyDefinitionId: policy3.id
-  }
-}
-
-resource policy4 'Microsoft.Authorization/policyDefinitions@2020-09-01' = {
   name: 'configure_windows_admin_center_on_windows_arc_servers'
   properties: configure_windows_admin_center_on_windows_arc_servers.properties
 }
 
-resource policy4as 'Microsoft.Authorization/policyAssignments@2022-06-01' = {
+resource policy3as 'Microsoft.Authorization/policyAssignments@2022-06-01' = {
   name: 'Configure Windows Admin Center on Windows Arc Servers'
   location: loganalyticsregion
   scope: subscription()
@@ -109,7 +85,7 @@ resource policy4as 'Microsoft.Authorization/policyAssignments@2022-06-01' = {
     displayName: 'Configure Windows Admin Center on Windows Arc Servers'
     parameters: {
     }
-    policyDefinitionId: policy4.id
+    policyDefinitionId: policy3.id
   }
 }
 
