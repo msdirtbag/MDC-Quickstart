@@ -6,9 +6,9 @@ targetScope = 'resourceGroup'
 param loganalyticsregion string
 
 //Resources
-//Azure Policy Remeditation Task User Managed Identity (Subscribtion Contributor)
-resource mdcmanagedidentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
-  name: 'mdc-azpolicy'
+//Azure Policy Remeditation Task User Managed Identity
+resource mdcmanagedidentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-07-31-preview' = {
+  name: 'umi-mdc-azpolicy'
   location: loganalyticsregion
 }
 

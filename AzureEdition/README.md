@@ -1,6 +1,6 @@
 # MDC-Quickstart 3.0
 
-This project is designed to assist IT teams to rapidly deploy the Defender for Cloud CNAPP.
+This project is designed to assist IT teams to rapidly deploy the Defender for Cloud CNAPP to Azure workloads.
 
 
 👉 What does it do?
