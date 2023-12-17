@@ -41,7 +41,7 @@ This project is designed to assist IT teams to rapidly deploy the Defender for C
 
 -This project should not deploy agents to AWS/GCP Virtual Machines/Containers.
 
--The ChangeTracking solution must be install on the Log Analytics Workspace. 
+-The ChangeTracking solution must be installed on the Log Analytics Workspace prior to deployment. 
 
--Defender for Endpoint needs Endpoint Security Policies for ASR Rules, Firewall, Antivirus, and EDR to achieve the best security outcomes. Leverage the security.microsoft.com portal to configure them. (https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/manage-security-policies?view=o365-worldwide#create-an-endpoint-security-policy)
+-Defender for Endpoint needs Endpoint Security Policies for Attack Surface Reduction Rules, Windows Firewall, Antivirus, and EDR to achieve the best security outcomes. Leverage the security.microsoft.com portal to configure these policies. (https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/manage-security-policies?view=o365-worldwide#create-an-endpoint-security-policy)
 
