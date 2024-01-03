@@ -45,3 +45,18 @@ This project is designed to assist IT teams to rapidly deploy the Defender for C
 
 -Defender for Endpoint needs Endpoint Security Policies for Attack Surface Reduction Rules, Windows Firewall, Antivirus, and EDR to achieve the best security outcomes. Leverage the security.microsoft.com portal to configure these policies. (https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/manage-security-policies?view=o365-worldwide#create-an-endpoint-security-policy)
 
+## Deployment Guides:
+
+Deployment process
+
+1-Clone/Download the MDC-Quickstart repo.
+
+2-Update the main.bicepparam file to include your information.
+
+3-Choose your deployment method:
+
+- VS Code: https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deploy-vscode
+- Azure CLI: https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deploy-cli
+- Azure PowerShell: https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deploy-powershell
+- Azure Cloud Shell: https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deploy-cloud-shell
+- GitHub Actions: https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/deploy-github-actions
